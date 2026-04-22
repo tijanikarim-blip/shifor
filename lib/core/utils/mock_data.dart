@@ -1,0 +1,137 @@
+class MockData {
+  static final List<Map<String, dynamic>> drivers = [
+    {
+      'id': '1',
+      'name': 'John Smith',
+      'photo': 'https://i.pravatar.cc/150?img=1',
+      'rating': 4.8,
+      'reviews': 127,
+      'verified': true,
+      'licenseType': 'Class A CDL',
+      'experience': '8 years',
+      'availability': true,
+      'location': 'Chicago, IL',
+      'hourlyRate': '\$28/hr',
+    },
+    {
+      'id': '2',
+      'name': 'Sarah Johnson',
+      'photo': 'https://i.pravatar.cc/150?img=5',
+      'rating': 4.9,
+      'reviews': 89,
+      'verified': true,
+      'licenseType': 'Class B CDL',
+      'experience': '5 years',
+      'availability': true,
+      'location': 'Chicago, IL',
+      'hourlyRate': '\$25/hr',
+    },
+    {
+      'id': '3',
+      'name': 'Mike Davis',
+      'photo': 'https://i.pravatar.cc/150?img=3',
+      'rating': 4.6,
+      'reviews': 64,
+      'verified': false,
+      'licenseType': 'Class A CDL',
+      'experience': '3 years',
+      'availability': false,
+      'location': 'Chicago, IL',
+      'hourlyRate': '\$24/hr',
+    },
+  ];
+
+  static final List<Map<String, dynamic>> jobs = [
+    {
+      'id': '1',
+      'title': 'CDL Driver Needed',
+      'company': 'Swift Logistics',
+      'logo': 'https://i.pravatar.cc/100?img=10',
+      'location': 'Chicago, IL',
+      'salary': '\$28-32/hr',
+      'type': 'Full-time',
+      'posted': '2 hours ago',
+      'description': 'Looking for experienced CDL driver for local deliveries.',
+    },
+    {
+      'id': '2',
+      'title': 'Delivery Driver',
+      'company': 'FastShip Inc.',
+      'logo': 'https://i.pravatar.cc/100?img=11',
+      'location': 'Chicago, IL',
+      'salary': '\$22-26/hr',
+      'type': 'Part-time',
+      'posted': '5 hours ago',
+      'description': 'Part-time delivery driver for residential areas.',
+    },
+    {
+      'id': '3',
+      'title': 'Truck Driver',
+      'company': 'Mega Transport',
+      'logo': 'https://i.pravatar.cc/100?img=12',
+      'location': 'Chicago, IL',
+      'salary': '\$30-35/hr',
+      'type': 'Full-time',
+      'posted': '1 day ago',
+      'description': 'OTR driver for long-haul routes.',
+    },
+  ];
+
+  static final List<Map<String, dynamic>> applications = [
+    {
+      'id': '1',
+      'jobTitle': 'CDL Driver Needed',
+      'company': 'Swift Logistics',
+      'logo': 'https://i.pravatar.cc/100?img=10',
+      'appliedDate': 'March 15, 2026',
+      'status': 'Under Review',
+      'statusColor': 0xFFF59E0B,
+    },
+    {
+      'id': '2',
+      'jobTitle': 'Delivery Driver',
+      'company': 'FastShip Inc.',
+      'logo': 'https://i.pravatar.cc/100?img=11',
+      'appliedDate': 'March 12, 2026',
+      'status': 'Interview Scheduled',
+      'statusColor': 0xFF10B981,
+    },
+  ];
+
+  static final List<Map<String, dynamic>> messages = [
+    {
+      'id': '1',
+      'name': 'Swift Logistics',
+      'photo': 'https://i.pravatar.cc/100?img=10',
+      'lastMessage': 'Your application is under review...',
+      'time': '10:30 AM',
+      'unread': 2,
+    },
+    {
+      'id': '2',
+      'name': 'FastShip Inc.',
+      'photo': 'https://i.pravatar.cc/100?img=11',
+      'lastMessage': 'Great! See you tomorrow at 9 AM.',
+      'time': 'Yesterday',
+      'unread': 0,
+    },
+  ];
+
+  static final Map<String, dynamic> currentDriver = {
+    'name': 'John Smith',
+    'photo': 'https://i.pravatar.cc/150?img=1',
+    'rating': 4.8,
+    'reviews': 127,
+    'licenseType': 'Class A CDL',
+    'experience': '8 years',
+    'availability': true,
+    'location': 'Chicago, IL',
+    'phone': '+1 (555) 123-4567',
+    'email': 'john.smith@email.com',
+    'verified': true,
+    'joinedDate': 'January 2024',
+    'completedJobs': 156,
+    'responseRate': '98%',
+    'acceptRate': '92%',
+  };
+}
