@@ -11,6 +11,24 @@ dependencies:
     sdk: flutter
   cached_network_image: ^3.3.0
   cupertino_icons: ^1.0.2
+  
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.16.0
+  cloud_firestore: ^4.14.0
+  firebase_storage: ^11.6.0
+  
+  # File & Image Pickers
+  image_picker: ^1.0.7
+  
+  # Location
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  
+  # Utilities
+  provider: ^6.1.1
+  shared_preferences: ^2.2.2
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
