@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../services/location_service.dart';
 import '../../data/repositories/user_repository.dart';
@@ -32,7 +34,8 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
 
   String? _profileImagePath;
   String? _licenseImagePath;
-  String? _attestationPath;
+  final List<File> _attestationFiles = [];
+  final List<String> _attestationNames = [];
   final List<String> _selectedLicenses = [];
   final List<String> _selectedLanguages = [];
   String? _currentCity;
@@ -52,11 +55,12 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
 
   void _updateProgress() {
     double progress = 0;
-    if (_nameController.text.isNotEmpty) progress += 20;
-    if (_selectedLicenses.isNotEmpty) progress += 20;
-    if (_selectedLanguages.isNotEmpty) progress += 20;
-    if (_profileImagePath != null) progress += 20;
-    if (_licenseImagePath != null) progress += 20;
+    if (_nameController.text.isNotEmpty) progress += 16;
+    if (_selectedLicenses.isNotEmpty) progress += 16;
+    if (_selectedLanguages.isNotEmpty) progress += 16;
+    if (_profileImagePath != null) progress += 16;
+    if (_licenseImagePath != null) progress += 16;
+    if (_attestationFiles.isNotEmpty) progress += 20;
     setState(() => _progress = progress);
   }
 
@@ -76,6 +80,38 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
       _updateProgress();
     }
     return pickedFile != null ? File(pickedFile.path) : null;
+  }
+
+  Future<void> _pickAttestations() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
+        allowMultiple: true,
+      );
+      
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          for (final file in result.files) {
+            if (file.path != null) {
+              _attestationFiles.add(File(file.path!));
+              _attestationNames.add(file.name);
+            }
+          }
+        });
+        _updateProgress();
+      }
+    } catch (e) {
+      setState(() => _error = 'Failed to pick files: $e');
+    }
+  }
+
+  void _removeAttestation(int index) {
+    setState(() {
+      _attestationFiles.removeAt(index);
+      _attestationNames.removeAt(index);
+    });
+    _updateProgress();
   }
 
   Future<void> _getLocation() async {
@@ -115,6 +151,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
     try {
       String? profileUrl;
       String? licenseUrl;
+      final List<String> attestationUrls = [];
 
       if (_profileImagePath != null) {
         profileUrl = await _storageRepository.uploadProfileImage(widget.userId, File(_profileImagePath!));
@@ -124,6 +161,11 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         licenseUrl = await _storageRepository.uploadLicenseImage(widget.userId, File(_licenseImagePath!));
       }
 
+      for (int i = 0; i < _attestationFiles.length; i++) {
+        final url = await _storageRepository.uploadAttestation(widget.userId, i, _attestationFiles[i]);
+        attestationUrls.add(url);
+      }
+
       final driverData = {
         'driverId': widget.userId,
         'licenses': _selectedLicenses,
@@ -131,7 +173,7 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         'experienceYears': int.tryParse(_experienceController.text) ?? 0,
         'profileImageUrl': profileUrl,
         'licenseImageUrl': licenseUrl,
-        'attestationUrls': _attestationPath != null ? [_attestationPath!] : [],
+        'attestationUrls': attestationUrls,
         'location': _currentCity != null ? {'city': _currentCity} : null,
         'isAvailable': false,
         'verificationStatus': 'pending',
@@ -179,6 +221,8 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
               _buildLanguagesSection(),
               const SizedBox(height: 24),
               _buildLocationSection(),
+              const SizedBox(height: 24),
+              _buildAttestationsSection(),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _isLoading ? null : _completeProfile,
@@ -345,6 +389,85 @@ class _ProfileCompletionScreenState extends State<ProfileCompletionScreen> {
         ),
       ],
     );
+  }
+
+  Widget _buildAttestationsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Attestations & Documents', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        Text('Upload certificates, attestations, or other documents (PDF, DOC, JPG, PNG)', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: _pickAttestations,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey[300]!, style: BorderStyle.solid),
+            ),
+            child: Column(
+              children: [
+                Icon(Icons.cloud_upload_outlined, size: 40, color: Colors.grey[600]),
+                const SizedBox(height: 8),
+                Text('Tap to add documents', style: TextStyle(color: Colors.grey[600])),
+                const SizedBox(height: 4),
+                Text('PDF, DOC, JPG, PNG allowed', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+              ],
+            ),
+          ),
+        ),
+        if (_attestationFiles.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          ...List.generate(_attestationFiles.length, (index) {
+            final isPdf = _attestationNames[index].toLowerCase().endsWith('.pdf');
+            return Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue[200]!),
+              ),
+              child: Row(
+                children: [
+                  Icon(isPdf ? Icons.picture_as_pdf : Icons.description, size: 20, color: Colors.blue[700]),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      _attestationNames[index],
+                      style: TextStyle(fontSize: 13, color: Colors.blue[700]),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, size: 18, color: Colors.blue[700]),
+                    onPressed: () => _removeAttestation(index),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ],
+    );
+  }
+
+  Future<void> _openAttestation(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open document')),
+        );
+      }
+    }
   }
 }
 
