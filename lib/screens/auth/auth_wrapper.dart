@@ -11,7 +11,11 @@ class AuthWrapper extends StatelessWidget {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
         if (authProvider.status == AuthStatus.unknown) {
-          return const SplashScreen();
+          if (authProvider.firebaseReady) {
+            return const SplashScreen();
+          } else {
+            return const SignInScreen();
+          }
         }
 
         if (authProvider.isAuthenticated) {

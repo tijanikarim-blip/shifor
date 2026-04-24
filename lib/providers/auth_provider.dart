@@ -12,26 +12,47 @@ class AuthProvider extends ChangeNotifier {
   AuthStatus _status = AuthStatus.unknown;
   bool _isLoading = false;
   String? _error;
+  bool _firebaseInitialized = false;
 
   UserModel? get user => _user;
   AuthStatus get status => _status;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
+  bool get firebaseReady => _firebaseInitialized;
 
   AuthProvider() {
     _checkAuthState();
   }
 
-  void _checkAuthState() {
-    _authService.authStateChanges.listen((UserModel? user) {
-      _user = user;
-      _status = user != null ? AuthStatus.authenticated : AuthStatus.unauthenticated;
-      notifyListeners();
-    });
+  Future<void> _checkAuthState() async {
+    try {
+      _authService.authStateChanges.listen((UserModel? user) {
+        if (user != null) {
+          _user = user;
+          _status = AuthStatus.authenticated;
+        } else {
+          _status = AuthStatus.unauthenticated;
+        }
+        _notify();
+      });
+      _firebaseInitialized = true;
+    } catch (e) {
+      _status = AuthStatus.unauthenticated;
+      _firebaseInitialized = false;
+    }
+    _notify();
+  }
+
+  void _notify() {
+    notifyListeners();
   }
 
   Future<bool> signIn(String email, String password) async {
+    if (!_firebaseInitialized) {
+      _error = 'Firebase not configured - demo mode';
+      return false;
+    }
     _setLoading(true);
     final result = await _authService.signIn(email, password);
     
@@ -54,6 +75,10 @@ class AuthProvider extends ChangeNotifier {
     required String phone,
     required String role,
   }) async {
+    if (!_firebaseInitialized) {
+      _error = 'Firebase not configured - demo mode';
+      return false;
+    }
     _setLoading(true);
     final result = await _authService.signUp(
       email: email,
@@ -89,6 +114,6 @@ class AuthProvider extends ChangeNotifier {
 
   void _setLoading(bool value) {
     _isLoading = value;
-    notifyListeners();
+    _notify();
   }
 }
