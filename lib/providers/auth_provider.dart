@@ -1,71 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
-import '../../services/auth_service.dart';
 import '../../data/models/data_models.dart';
 
 enum AuthStatus { unknown, authenticated, unauthenticated }
 
 class AuthProvider extends ChangeNotifier {
-  final AuthService _authService = AuthService();
   
   UserModel? _user;
-  AuthStatus _status = AuthStatus.unknown;
+  AuthStatus _status = AuthStatus.unauthenticated;
   bool _isLoading = false;
   String? _error;
-  bool _firebaseInitialized = false;
+  bool _firebaseReady = true;
+  final bool _useDemoMode;
 
   UserModel? get user => _user;
   AuthStatus get status => _status;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
-  bool get firebaseReady => _firebaseInitialized;
+  bool get firebaseReady => _firebaseReady;
 
-  AuthProvider() {
-    _checkAuthState();
-  }
-
-  Future<void> _checkAuthState() async {
-    try {
-      _authService.authStateChanges.listen((UserModel? user) {
-        if (user != null) {
-          _user = user;
-          _status = AuthStatus.authenticated;
-        } else {
-          _status = AuthStatus.unauthenticated;
-        }
-        _notify();
-      });
-      _firebaseInitialized = true;
-    } catch (e) {
+  AuthProvider([this._useDemoMode = false]) {
+    if (_useDemoMode) {
+      _firebaseReady = false;
       _status = AuthStatus.unauthenticated;
-      _firebaseInitialized = false;
+      notifyListeners();
+    } else {
+      _status = AuthStatus.unknown;
+      notifyListeners();
     }
-    _notify();
-  }
-
-  void _notify() {
-    notifyListeners();
   }
 
   Future<bool> signIn(String email, String password) async {
-    if (!_firebaseInitialized) {
-      _error = 'Firebase not configured - demo mode';
-      return false;
+    if (!_firebaseReady) {
+      _isLoading = true;
+      notifyListeners();
+      
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      if (email.isNotEmpty && password.isNotEmpty) {
+        _user = UserModel(
+          id: 'demo_user',
+          email: email,
+          name: email.split('@').first,
+          phone: '',
+          role: 'driver',
+          createdAt: DateTime.now(),
+        );
+        _status = AuthStatus.authenticated;
+        _error = null;
+      } else {
+        _error = 'Invalid credentials';
+      }
+      
+      _isLoading = false;
+      notifyListeners();
+      return _status == AuthStatus.authenticated;
     }
-    _setLoading(true);
-    final result = await _authService.signIn(email, password);
     
-    if (result.isSuccess) {
-      _user = result.data;
-      _status = AuthStatus.authenticated;
-      _error = null;
-    } else {
-      _error = result.error;
-    }
-    
-    _setLoading(false);
-    return result.isSuccess;
+    _error = 'Firebase not configured';
+    notifyListeners();
+    return false;
   }
 
   Future<bool> signUp({
@@ -75,45 +69,56 @@ class AuthProvider extends ChangeNotifier {
     required String phone,
     required String role,
   }) async {
-    if (!_firebaseInitialized) {
-      _error = 'Firebase not configured - demo mode';
-      return false;
-    }
-    _setLoading(true);
-    final result = await _authService.signUp(
-      email: email,
-      password: password,
-      name: name,
-      phone: phone,
-      role: role,
-    );
-    
-    if (result.isSuccess) {
-      _user = result.data;
+    if (!_firebaseReady) {
+      _isLoading = true;
+      notifyListeners();
+      
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      _user = UserModel(
+        id: 'demo_user',
+        email: email,
+        name: name,
+        phone: phone,
+        role: role,
+        createdAt: DateTime.now(),
+      );
       _status = AuthStatus.authenticated;
       _error = null;
-    } else {
-      _error = result.error;
+      
+      _isLoading = false;
+      notifyListeners();
+      return true;
     }
     
-    _setLoading(false);
-    return result.isSuccess;
+    _error = 'Firebase not configured';
+    notifyListeners();
+    return false;
   }
 
   Future<void> signOut() async {
-    _setLoading(true);
-    await _authService.signOut();
+    _isLoading = true;
+    notifyListeners();
+    
+    await Future.delayed(const Duration(milliseconds: 300));
+    
     _user = null;
     _status = AuthStatus.unauthenticated;
-    _setLoading(false);
+    _isLoading = false;
+    notifyListeners();
   }
 
-  Future<void> updateUserProfile(Map<String, dynamic> data) async {
-    await _authService.updateProfile(data);
-  }
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-    _notify();
+  void updateUserProfile(Map<String, dynamic> data) {
+    if (_user != null && !_firebaseReady) {
+      _user = UserModel(
+        id: _user!.id,
+        email: _user!.email,
+        name: data['name'] ?? _user!.name,
+        phone: data['phone'] ?? _user!.phone,
+        role: data['role'] ?? _user!.role,
+        createdAt: _user!.createdAt,
+      );
+      notifyListeners();
+    }
   }
 }

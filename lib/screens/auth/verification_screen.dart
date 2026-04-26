@@ -59,7 +59,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     
     if (_emailOtpController.text.trim().length == 6) {
       final authProvider = context.read<AuthProvider>();
-      await authProvider.updateUserProfile({'isEmailVerified': true});
+      authProvider.updateUserProfile({'isEmailVerified': true});
       setState(() => _isEmailVerified = true);
     }
     setState(() => _isEmailLoading = false);
@@ -82,7 +82,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     
     if (_phoneOtpController.text.trim().length == 6) {
       final authProvider = context.read<AuthProvider>();
-      await authProvider.updateUserProfile({'isPhoneVerified': true});
+      authProvider.updateUserProfile({'isPhoneVerified': true});
       setState(() => _isPhoneVerified = true);
     }
     setState(() => _isPhoneLoading = false);
