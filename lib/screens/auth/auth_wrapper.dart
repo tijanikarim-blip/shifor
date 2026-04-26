@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-import '../auth/sign_in_screen.dart';
+import '../home_screen.dart';
+import 'sign_in_screen.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -10,12 +11,12 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
+        if (!authProvider.firebaseReady) {
+          return const SignInScreen();
+        }
+        
         if (authProvider.status == AuthStatus.unknown) {
-          if (authProvider.firebaseReady) {
-            return const SplashScreen();
-          } else {
-            return const SignInScreen();
-          }
+          return const SplashScreen();
         }
 
         if (authProvider.isAuthenticated) {
@@ -33,9 +34,7 @@ class MainAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Main App')),
-    );
+    return const HomeScreen();
   }
 }
 

@@ -20,14 +20,9 @@ class AuthProvider extends ChangeNotifier {
   bool get firebaseReady => _firebaseReady;
 
   AuthProvider([this._useDemoMode = false]) {
-    if (_useDemoMode) {
-      _firebaseReady = false;
-      _status = AuthStatus.unauthenticated;
-      notifyListeners();
-    } else {
-      _status = AuthStatus.unknown;
-      notifyListeners();
-    }
+    _firebaseReady = !_useDemoMode;
+    _status = AuthStatus.unauthenticated;
+    notifyListeners();
   }
 
   Future<bool> signIn(String email, String password) async {
