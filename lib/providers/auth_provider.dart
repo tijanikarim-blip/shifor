@@ -19,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _status == AuthStatus.authenticated;
   bool get firebaseReady => _firebaseReady;
 
-  AuthProvider([this._useDemoMode = false]) {
+  AuthProvider([this._useDemoMode = true]) {
     _firebaseReady = !_useDemoMode;
     _status = AuthStatus.unauthenticated;
     notifyListeners();
