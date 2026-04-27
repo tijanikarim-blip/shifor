@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../screens/home_screen.dart';
+import '../../screens/auth/main_app_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -43,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
     if (success) {
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const AppAuthWrapper()),
         );
       }
     } else if (mounted) {
@@ -218,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (success) {
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const AppAuthWrapper()),
         );
       }
     } else if (mounted) {
