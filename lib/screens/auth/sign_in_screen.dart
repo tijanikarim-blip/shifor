@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../services/auth_service.dart';
+import '../../screens/home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -41,7 +41,13 @@ class _SignInScreenState extends State<SignInScreen> {
       _passwordController.text,
     );
 
-    if (!success && mounted) {
+    if (success) {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } else if (mounted) {
       setState(() => _error = authProvider.error ?? 'Sign in failed');
     }
 
@@ -210,7 +216,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       role: _selectedRole,
     );
 
-    if (!success && mounted) {
+    if (success) {
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } else if (mounted) {
       setState(() => _error = authProvider.error ?? 'Sign up failed');
     }
 
