@@ -36,7 +36,7 @@ class ShiforApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider(_firebaseInitialized)),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
         title: 'Shifor',
