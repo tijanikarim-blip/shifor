@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart' show Firebase;
 
 import 'core/theme/app_theme.dart';
 import 'providers/auth_provider.dart';
-import 'screens/auth/auth_wrapper.dart';
+import 'screens/auth/main_app_screen.dart';
 
 bool _useDemoMode = true; // Set to false when Firebase is fully configured with SHA keys
 
@@ -39,7 +39,7 @@ class ShiforApp extends StatelessWidget {
         title: 'Shifor',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: const AuthWrapper(),
+        home: const AppAuthWrapper(),
       ),
     );
   }
