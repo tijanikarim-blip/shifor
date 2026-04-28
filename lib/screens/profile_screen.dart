@@ -139,6 +139,58 @@ class ProfileScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   Container(
                     width: double.infinity,
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: authProvider.isAvailable 
+                                ? AppColors.success.withValues(alpha: 0.1)
+                                : AppColors.error.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            authProvider.isAvailable ? Icons.toggle_on : Icons.toggle_off,
+                            color: authProvider.isAvailable ? AppColors.success : AppColors.error,
+                            size: 28,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Availability',
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                authProvider.isAvailable ? 'You are available for jobs' : 'Not accepting jobs',
+                                style: TextStyle(fontSize: 12, color: authProvider.isAvailable ? AppColors.success : AppColors.textSecondary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Switch(
+                          value: authProvider.isAvailable,
+                          onChanged: (_) => authProvider.toggleAvailability(),
+                          activeTrackColor: AppColors.success.withValues(alpha: 0.5),
+                          inactiveThumbColor: Colors.grey,
+                          inactiveTrackColor: Colors.grey.withValues(alpha: 0.3),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: const BoxDecoration(color: AppColors.white),
                     child: Column(
