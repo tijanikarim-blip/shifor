@@ -247,22 +247,22 @@ class MockData {
     'Saudi Arabia': ['Riyadh', 'Jeddah', 'Mecca', 'Medina', 'Dammam', 'Khobar', 'Abha', 'Tabuk', 'Buraidah', 'Qatif'],
   };
 
-  static final List<Map<String, String>> languages = [
-    {'code': 'en', 'name': 'English', 'native': 'English'},
-    {'code': 'fr', 'name': 'French', 'native': 'Francais'},
-    {'code': 'es', 'name': 'Spanish', 'native': 'Espanol'},
-    {'code': 'de', 'name': 'German', 'native': 'Deutsch'},
-    {'code': 'it', 'name': 'Italian', 'native': 'Italiano'},
-    {'code': 'pt', 'name': 'Portuguese', 'native': 'Portugues'},
-    {'code': 'ar', 'name': 'Arabic', 'native': 'العربية'},
-    {'code': 'zh', 'name': 'Chinese', 'native': '中文'},
-    {'code': 'ja', 'name': 'Japanese', 'native': '日本語'},
-    {'code': 'ko', 'name': 'Korean', 'native': '한국어'},
-    {'code': 'hi', 'name': 'Hindi', 'native': 'हिन्दी'},
-    {'code': 'ru', 'name': 'Russian', 'native': 'Русский'},
-    {'code': 'tr', 'name': 'Turkish', 'native': 'Turkce'},
-    {'code': 'nl', 'name': 'Dutch', 'native': 'Nederlands'},
-    {'code': 'pl', 'name': 'Polish', 'native': 'Polski'},
+  static final List<String> languages = [
+    'English',
+    'French',
+    'Spanish',
+    'German',
+    'Italian',
+    'Portuguese',
+    'Arabic',
+    'Chinese',
+    'Japanese',
+    'Korean',
+    'Hindi',
+    'Russian',
+    'Turkish',
+    'Dutch',
+    'Polish',
   ];
 
   static final List<String> licenseTypes = [
