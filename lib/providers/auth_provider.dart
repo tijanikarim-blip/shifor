@@ -10,6 +10,7 @@ class AuthProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   bool _firebaseReady = true;
+  bool _isAvailable = false;
   final bool _useDemoMode;
 
   UserModel? get user => _user;
@@ -18,10 +19,12 @@ class AuthProvider extends ChangeNotifier {
   String? get error => _error;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
   bool get firebaseReady => _firebaseReady;
+  bool get isAvailable => _isAvailable;
 
   AuthProvider([this._useDemoMode = true]) {
     _firebaseReady = !_useDemoMode;
     _status = AuthStatus.unauthenticated;
+    _isAvailable = false;
     notifyListeners();
   }
 
@@ -115,5 +118,10 @@ class AuthProvider extends ChangeNotifier {
       );
       notifyListeners();
     }
+  }
+
+  void toggleAvailability() {
+    _isAvailable = !_isAvailable;
+    notifyListeners();
   }
 }

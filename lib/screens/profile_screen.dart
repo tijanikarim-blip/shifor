@@ -104,6 +104,35 @@ class ProfileScreen extends StatelessWidget {
                           user.email.isNotEmpty ? user.email : '',
                           style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
                         ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: authProvider.isAvailable 
+                                ? AppColors.success.withValues(alpha: 0.1)
+                                : AppColors.error.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                authProvider.isAvailable ? Icons.check_circle : Icons.cancel,
+                                color: authProvider.isAvailable ? AppColors.success : AppColors.error,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                authProvider.isAvailable ? 'Available' : 'Unavailable',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: authProvider.isAvailable ? AppColors.success : AppColors.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
