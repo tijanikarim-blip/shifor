@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/mock_data.dart';
 import '../providers/auth_provider.dart';
 import '../widgets/job_card.dart';
 import '../widgets/filter_bar.dart';
@@ -332,40 +333,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Map<String, dynamic>> _getMockJobs() {
-    return [
-      {
-        'id': '1',
-        'title': 'Long Distance Driver',
-        'company': 'Fast Transport Co.',
-        'location': 'Paris, France',
-        'salary': '€3,500 - €4,500/month',
-        'type': 'Full-time',
-        'requirements': ['CDL License', '3+ years experience'],
-        'posted': '2 hours ago',
-        'isUrgent': true,
-      },
-      {
-        'id': '2',
-        'title': 'Delivery Driver',
-        'company': 'QuickDeliver',
-        'location': 'Lyon, France',
-        'salary': '€2,800 - €3,200/month',
-        'type': 'Part-time',
-        'requirements': ['Valid License', 'Own vehicle'],
-        'posted': '5 hours ago',
-        'isUrgent': false,
-      },
-      {
-        'id': '3',
-        'title': 'Truck Driver',
-        'company': 'MegaLogistics',
-        'location': 'Marseille, France',
-        'salary': '€4,000 - €5,000/month',
-        'type': 'Full-time',
-        'requirements': ['CDL-A', '5+ years experience'],
-        'posted': '1 day ago',
-        'isUrgent': false,
-      },
-    ];
+    return MockData.jobs.take(4).map((job) => {
+      'id': job['id'],
+      'title': job['title'],
+      'company': job['company'],
+      'location': job['location'],
+      'salary': job['salary'],
+      'type': job['type'],
+      'requirements': job['requirements'] ?? [],
+      'posted': job['posted'],
+      'isUrgent': job['isUrgent'] ?? false,
+    }).toList();
   }
 }

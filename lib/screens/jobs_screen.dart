@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/mock_data.dart';
 import '../widgets/job_card.dart';
 import '../widgets/filter_bar.dart';
 
@@ -129,63 +130,17 @@ class _JobsScreenState extends State<JobsScreen> {
   }
 
   List<Map<String, dynamic>> _getAllJobs() {
-    return [
-      {
-        'id': '1',
-        'title': 'Long Distance Driver',
-        'company': 'Fast Transport Co.',
-        'location': 'Paris, France',
-        'salary': '€3,500 - €4,500/month',
-        'type': 'Full-time',
-        'requirements': ['CDL License', '3+ years experience'],
-        'posted': '2 hours ago',
-        'isUrgent': true,
-      },
-      {
-        'id': '2',
-        'title': 'Delivery Driver',
-        'company': 'QuickDeliver',
-        'location': 'Lyon, France',
-        'salary': '€2,800 - €3,200/month',
-        'type': 'Part-time',
-        'requirements': ['Valid License', 'Own vehicle'],
-        'posted': '5 hours ago',
-        'isUrgent': false,
-      },
-      {
-        'id': '3',
-        'title': 'Truck Driver',
-        'company': 'MegaLogistics',
-        'location': 'Marseille, France',
-        'salary': '€4,000 - €5,000/month',
-        'type': 'Full-time',
-        'requirements': ['CDL-A', '5+ years experience'],
-        'posted': '1 day ago',
-        'isUrgent': false,
-      },
-      {
-        'id': '4',
-        'title': 'Local Delivery Driver',
-        'company': 'CityExpress',
-        'location': 'Toulouse, France',
-        'salary': '€2,500 - €3,000/month',
-        'type': 'Contract',
-        'requirements': ['B License', '1+ year experience'],
-        'posted': '3 hours ago',
-        'isUrgent': true,
-      },
-      {
-        'id': '5',
-        'title': 'Bus Driver',
-        'company': 'TransCity',
-        'location': 'Nice, France',
-        'salary': '€3,200 - €3,800/month',
-        'type': 'Full-time',
-        'requirements': ['CDL-B', 'Passenger transport license'],
-        'posted': '1 day ago',
-        'isUrgent': false,
-      },
-    ];
+    return MockData.jobs.map((job) => {
+      'id': job['id'],
+      'title': job['title'],
+      'company': job['company'],
+      'location': job['location'],
+      'salary': job['salary'],
+      'type': job['type'],
+      'requirements': job['requirements'] ?? [],
+      'posted': job['posted'],
+      'isUrgent': job['isUrgent'] ?? false,
+    }).toList();
   }
 
   void _showJobDetails(BuildContext context, Map<String, dynamic> job) {
