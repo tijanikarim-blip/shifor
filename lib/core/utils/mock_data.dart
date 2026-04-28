@@ -205,4 +205,75 @@ class MockData {
     'responseRate': '98%',
     'acceptRate': '92%',
   };
+
+  static final List<String> countries = [
+    'United States',
+    'United Kingdom',
+    'Germany',
+    'France',
+    'Spain',
+    'Italy',
+    'Netherlands',
+    'Belgium',
+    'Canada',
+    'Australia',
+    'Japan',
+    'UAE',
+    'Saudi Arabia',
+    'Qatar',
+    'Kuwait',
+    'Bahrain',
+    'Oman',
+    'Egypt',
+    'Morocco',
+    'Tunisia',
+    'Algeria',
+    'Nigeria',
+    'Kenya',
+    'South Africa',
+    'Brazil',
+    'Mexico',
+  ];
+
+  static final Map<String, List<String>> citiesByCountry = {
+    'United States': ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'],
+    'United Kingdom': ['London', 'Birmingham', 'Manchester', 'Glasgow', 'Liverpool', 'Bristol', 'Sheffield', 'Leeds', 'Edinburgh', 'Leicester'],
+    'Germany': ['Berlin', 'Munich', 'Hamburg', 'Frankfurt', 'Cologne', 'Stuttgart', 'Dusseldorf', 'Dortmund', 'Essen', 'Leipzig'],
+    'France': ['Paris', 'Marseille', 'Lyon', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier', 'Bordeaux', 'Lille'],
+    'Spain': ['Madrid', 'Barcelona', 'Valencia', 'Seville', 'Zaragoza', 'Malaga', 'Murcia', 'Palma', 'Las Palmas', 'Bilbao'],
+    'Italy': ['Rome', 'Milan', 'Naples', 'Turin', 'Palermo', 'Genoa', 'Bologna', 'Florence', 'Bari', 'Catania'],
+    'Canada': ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Edmonton', 'Ottawa', 'Winnipeg', 'Quebec City', 'Hamilton', 'Kitchener'],
+    'UAE': ['Dubai', 'Abu Dhabi', 'Sharjah', 'Al Ain', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain', 'Khalifa City', 'Jebel Ali'],
+    'Saudi Arabia': ['Riyadh', 'Jeddah', 'Mecca', 'Medina', 'Dammam', 'Khobar', 'Abha', 'Tabuk', 'Buraidah', 'Qatif'],
+  };
+
+  static final List<Map<String, String>> languages = [
+    {'code': 'en', 'name': 'English', 'native': 'English'},
+    {'code': 'fr', 'name': 'French', 'native': 'Francais'},
+    {'code': 'es', 'name': 'Spanish', 'native': 'Espanol'},
+    {'code': 'de', 'name': 'German', 'native': 'Deutsch'},
+    {'code': 'it', 'name': 'Italian', 'native': 'Italiano'},
+    {'code': 'pt', 'name': 'Portuguese', 'native': 'Portugues'},
+    {'code': 'ar', 'name': 'Arabic', 'native': 'العربية'},
+    {'code': 'zh', 'name': 'Chinese', 'native': '中文'},
+    {'code': 'ja', 'name': 'Japanese', 'native': '日本語'},
+    {'code': 'ko', 'name': 'Korean', 'native': '한국어'},
+    {'code': 'hi', 'name': 'Hindi', 'native': 'हिन्दी'},
+    {'code': 'ru', 'name': 'Russian', 'native': 'Русский'},
+    {'code': 'tr', 'name': 'Turkish', 'native': 'Turkce'},
+    {'code': 'nl', 'name': 'Dutch', 'native': 'Nederlands'},
+    {'code': 'pl', 'name': 'Polish', 'native': 'Polski'},
+  ];
+
+  static final List<String> licenseTypes = [
+    'Class A CDL',
+    'Class B CDL',
+    'Class C CDL',
+    'CDL-A',
+    'CDL-B',
+    'CDL-C',
+    'Standard Driving License',
+    'Provisional License',
+    'Learner\'s Permit',
+  ];
 }

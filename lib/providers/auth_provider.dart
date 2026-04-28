@@ -43,6 +43,10 @@ class AuthProvider extends ChangeNotifier {
           phone: '',
           role: 'driver',
           createdAt: DateTime.now(),
+          country: 'United States',
+          city: 'New York',
+          languages: ['English'],
+          licenseType: 'Class A CDL',
         );
         _status = AuthStatus.authenticated;
         _error = null;
@@ -66,6 +70,11 @@ class AuthProvider extends ChangeNotifier {
     required String name,
     required String phone,
     required String role,
+    String? country,
+    String? city,
+    DateTime? dateOfBirth,
+    String? licenseType,
+    List<String>? languages,
   }) async {
     if (!_firebaseReady) {
       _isLoading = true;
@@ -80,6 +89,11 @@ class AuthProvider extends ChangeNotifier {
         phone: phone,
         role: role,
         createdAt: DateTime.now(),
+        country: country,
+        city: city,
+        dateOfBirth: dateOfBirth,
+        licenseType: licenseType,
+        languages: languages ?? ['English'],
       );
       _status = AuthStatus.authenticated;
       _error = null;
@@ -115,6 +129,12 @@ class AuthProvider extends ChangeNotifier {
         phone: data['phone'] ?? _user!.phone,
         role: data['role'] ?? _user!.role,
         createdAt: _user!.createdAt,
+        profileImageUrl: data['profileImageUrl'] ?? _user!.profileImageUrl,
+        dateOfBirth: data['dateOfBirth'] ?? _user!.dateOfBirth,
+        country: data['country'] ?? _user!.country,
+        city: data['city'] ?? _user!.city,
+        licenseType: data['licenseType'] ?? _user!.licenseType,
+        languages: data['languages'] ?? _user!.languages,
       );
       notifyListeners();
     }

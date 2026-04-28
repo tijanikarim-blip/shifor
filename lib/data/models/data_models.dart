@@ -10,6 +10,11 @@ class UserModel {
   final bool profileCompleted;
   final DateTime createdAt;
   final String? profileImageUrl;
+  final DateTime? dateOfBirth;
+  final String? country;
+  final String? city;
+  final String? licenseType;
+  final List<String> languages;
 
   const UserModel({
     required this.id,
@@ -23,6 +28,11 @@ class UserModel {
     this.profileCompleted = false,
     required this.createdAt,
     this.profileImageUrl,
+    this.dateOfBirth,
+    this.country,
+    this.city,
+    this.licenseType,
+    this.languages = const [],
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
@@ -40,6 +50,15 @@ class UserModel {
           ? DateTime.parse(map['createdAt'] as String)
           : DateTime.now(),
       profileImageUrl: map['profileImageUrl'] as String?,
+      dateOfBirth: map['dateOfBirth'] != null 
+          ? DateTime.tryParse(map['dateOfBirth'] as String)
+          : null,
+      country: map['country'] as String?,
+      city: map['city'] as String?,
+      licenseType: map['licenseType'] as String?,
+      languages: (map['languages'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ?? [],
     );
   }
 
@@ -55,6 +74,11 @@ class UserModel {
       'profileCompleted': profileCompleted,
       'createdAt': createdAt.toIso8601String(),
       'profileImageUrl': profileImageUrl,
+      'dateOfBirth': dateOfBirth?.toIso8601String(),
+      'country': country,
+      'city': city,
+      'licenseType': licenseType,
+      'languages': languages,
     };
   }
 
