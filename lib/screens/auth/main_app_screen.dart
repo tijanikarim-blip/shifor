@@ -102,9 +102,6 @@ class AppAuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, _) {
-        if (!authProvider.firebaseReady) {
-          return const SignInScreen();
-        }
         if (authProvider.status == AuthStatus.unknown) {
           return const AppSplashScreen();
         }
