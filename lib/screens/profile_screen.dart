@@ -200,7 +200,7 @@ class ProfileScreen extends StatelessWidget {
                         _buildStatRow(Icons.language_outlined, 'Languages', user.languages.isNotEmpty 
                         ? user.languages.map((l) {
                             final flag = MockData.languageFlags[l] ?? '🌐';
-                            return '$flag $l';
+                            return flag;
                           }).join(', ')
                         : 'Not set'),
                         const Divider(height: 24, color: AppColors.divider),
@@ -475,7 +475,7 @@ class ProfileScreen extends StatelessWidget {
                     final isSelected = selectedLanguages.contains(lang);
                     final flag = MockData.languageFlags[lang] ?? '🌐';
                     return FilterChip(
-                      label: Text('$flag $lang'),
+                      label: Text(flag),
                       selected: isSelected,
                       onSelected: (selected) {
                         if (selected) {
