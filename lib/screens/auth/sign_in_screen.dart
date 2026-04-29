@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/theme/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../screens/auth/main_app_screen.dart';
 
@@ -17,6 +18,7 @@ class _SignInScreenState extends State<SignInScreen> {
   
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _saveLogin = false;
   String? _error;
 
   @override
@@ -161,15 +163,28 @@ class _SignInScreenState extends State<SignInScreen> {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : const Text('Sign In', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Text('Sign In', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _saveLogin,
+                      onChanged: (v) => setState(() => _saveLogin = v ?? false),
+                      activeColor: AppColors.primary,
+                    ),
+                    const Text('Remember me'),
+                    const Spacer(),
+                    TextButton(onPressed: () {}, child: const Text('Forgot Password?')),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
