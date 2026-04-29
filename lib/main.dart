@@ -8,7 +8,7 @@ import 'providers/auth_provider.dart';
 import 'providers/company_provider.dart';
 import 'screens/auth/main_app_screen.dart';
 
-bool _useDemoMode = true; // Set to false when Firebase is fully configured with SHA keys
+bool _useDemoMode = true; // Set to false when Firebase is configured
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
