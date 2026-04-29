@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/mock_data.dart';
 import '../providers/auth_provider.dart';
@@ -305,6 +306,7 @@ class ProfileScreen extends StatelessWidget {
     String? selectedCity = user?.city;
     String? selectedLicenseType = user?.licenseType;
     List<String> selectedLanguages = List<String>.from(user?.languages ?? ['English']);
+    String? newProfileImageUrl;
     
     showModalBottomSheet(
       context: context,
@@ -326,6 +328,51 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Text('Edit Profile', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
+                Center(
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: newProfileImageUrl != null
+                              ? Image.network(newProfileImageUrl!, width: 100, height: 100, fit: BoxFit.cover)
+                              : (user?.profileImageUrl != null && user!.profileImageUrl!.isNotEmpty
+                                  ? Image.network(user.profileImageUrl!, width: 100, height: 100, fit: BoxFit.cover)
+                                  : const Icon(Icons.person, size: 50, color: AppColors.primary)),
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: GestureDetector(
+                          onTap: () async {
+                            final picker = ImagePicker();
+                            final image = await picker.pickImage(source: ImageSource.gallery);
+                            if (image != null) {
+                              newProfileImageUrl = image.path;
+                              setModalState(() {});
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.camera_alt, size: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: nameController,
@@ -416,6 +463,7 @@ class ProfileScreen extends StatelessWidget {
                       'city': selectedCity,
                       'licenseType': selectedLicenseType,
                       'languages': selectedLanguages,
+                      'profileImageUrl': newProfileImageUrl ?? user?.profileImageUrl,
                     });
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
