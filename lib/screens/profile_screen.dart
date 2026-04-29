@@ -214,6 +214,8 @@ class ProfileScreen extends StatelessWidget {
                         const Divider(height: 24, color: AppColors.divider),
                         _buildStatRow(Icons.email_outlined, 'Email', user.email.isNotEmpty ? user.email : 'Not set'),
                         const Divider(height: 24, color: AppColors.divider),
+                        _buildStatRow(Icons.cake_outlined, 'Date of Birth', user.dateOfBirth != null ? '${user.dateOfBirth!.day}/${user.dateOfBirth!.month}/${user.dateOfBirth!.year}' : 'Not set'),
+                        const Divider(height: 24, color: AppColors.divider),
                         _buildStatRow(Icons.work_outline, 'Role', user.role.toUpperCase()),
                         const Divider(height: 24, color: AppColors.divider),
                         _buildStatRow(Icons.calendar_today_outlined, 'Joined', '${user.createdAt.day}/${user.createdAt.month}/${user.createdAt.year}'),
@@ -307,6 +309,7 @@ class ProfileScreen extends StatelessWidget {
     String? selectedLicenseType = user?.licenseType;
     List<String> selectedLanguages = List<String>.from(user?.languages ?? ['English']);
     String? newProfileImageUrl;
+    DateTime? selectedDateOfBirth;
     
     showModalBottomSheet(
       context: context,
@@ -404,6 +407,34 @@ class ProfileScreen extends StatelessWidget {
                   onChanged: (value) => selectedLicenseType = value,
                 ),
                 const SizedBox(height: 16),
+                InkWell(
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDateOfBirth ?? DateTime(1990, 1, 1),
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime.now(),
+                    );
+                    if (date != null) {
+                      selectedDateOfBirth = date;
+                      setModalState(() {});
+                    }
+                  },
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: 'Date of Birth',
+                      prefixIcon: const Icon(Icons.cake_outlined),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: Text(
+                      selectedDateOfBirth != null
+                          ? '${selectedDateOfBirth!.day}/${selectedDateOfBirth!.month}/${selectedDateOfBirth!.year}'
+                          : 'Select date',
+                      style: TextStyle(color: selectedDateOfBirth != null ? AppColors.textPrimary : AppColors.textSecondary),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: selectedCountry,
                   decoration: InputDecoration(
@@ -464,6 +495,7 @@ class ProfileScreen extends StatelessWidget {
                       'licenseType': selectedLicenseType,
                       'languages': selectedLanguages,
                       'profileImageUrl': newProfileImageUrl ?? user?.profileImageUrl,
+                      'dateOfBirth': selectedDateOfBirth,
                     });
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
