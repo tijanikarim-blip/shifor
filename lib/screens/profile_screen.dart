@@ -196,7 +196,12 @@ class ProfileScreen extends StatelessWidget {
                     decoration: const BoxDecoration(color: AppColors.white),
                     child: Column(
                       children: [
-                        _buildStatRow(Icons.language_outlined, 'Languages', user.languages.isNotEmpty ? user.languages.join(', ') : 'Not set'),
+                        _buildStatRow(Icons.language_outlined, 'Languages', user.languages.isNotEmpty 
+                        ? user.languages.map((l) {
+                            final flag = MockData.languageFlags[l] ?? '🌐';
+                            return '$flag $l';
+                          }).join(', ')
+                        : 'Not set'),
                         const Divider(height: 24, color: AppColors.divider),
                         _buildStatRow(Icons.location_on_outlined, 'Country', user.country?.isNotEmpty == true ? user.country! : 'Not set'),
                         const Divider(height: 24, color: AppColors.divider),
@@ -299,7 +304,7 @@ class ProfileScreen extends StatelessWidget {
     String? selectedCountry = user?.country;
     String? selectedCity = user?.city;
     String? selectedLicenseType = user?.licenseType;
-    List<String> selectedLanguages = <String>[...user?.languages ?? <String>['English']];
+    List<String> selectedLanguages = List<String>.from(user?.languages ?? ['English']);
     
     showModalBottomSheet(
       context: context,
@@ -386,8 +391,9 @@ class ProfileScreen extends StatelessWidget {
                   runSpacing: 8,
                   children: MockData.languages.map((lang) {
                     final isSelected = selectedLanguages.contains(lang);
+                    final flag = MockData.languageFlags[lang] ?? '🌐';
                     return FilterChip(
-                      label: Text(lang),
+                      label: Text('$flag $lang'),
                       selected: isSelected,
                       onSelected: (selected) {
                         if (selected) {

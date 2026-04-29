@@ -247,22 +247,42 @@ class MockData {
     'Saudi Arabia': ['Riyadh', 'Jeddah', 'Mecca', 'Medina', 'Dammam', 'Khobar', 'Abha', 'Tabuk', 'Buraidah', 'Qatif'],
   };
 
+  static final Map<String, String> languageFlags = {
+    'English': '🇬🇧',
+    'French': '🇫🇷',
+    'Spanish': '🇪🇸',
+    'German': '🇩🇪',
+    'Italian': '🇮🇹',
+    'Portuguese': '🇵🇹',
+    'Arabic': '🇸🇦',
+    'Chinese': '🇨🇳',
+    'Japanese': '🇯🇵',
+    'Korean': '🇰🇷',
+    'Hindi': '🇮🇳',
+    'Russian': '🇷🇺',
+    'Turkish': '🇹🇷',
+    'Dutch': '🇳🇱',
+    'Polish': '🇵🇱',
+    'Tamazight': '🇲🇦',
+  };
+
   static final List<String> languages = [
-    'English',
-    'French',
-    'Spanish',
-    'German',
-    'Italian',
-    'Portuguese',
     'Arabic',
     'Chinese',
+    'Dutch',
+    'English',
+    'French',
+    'German',
+    'Hindi',
+    'Italian',
     'Japanese',
     'Korean',
-    'Hindi',
-    'Russian',
-    'Turkish',
-    'Dutch',
     'Polish',
+    'Portuguese',
+    'Russian',
+    'Spanish',
+    'Tamazight',
+    'Turkish',
   ];
 
   static final List<String> licenseTypes = [
