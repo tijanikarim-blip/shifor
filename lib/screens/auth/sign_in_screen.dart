@@ -65,7 +65,16 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                const Icon(Icons.directions_car, size: 80, color: Color(0xFF1E88E5)),
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    image: const DecorationImage(
+                      image: AssetImage('assets/shifor_sign_in_logo.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 24),
                 const Text(
                   'Welcome Back',

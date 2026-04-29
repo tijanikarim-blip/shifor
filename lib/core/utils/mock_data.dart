@@ -248,22 +248,22 @@ class MockData {
   };
 
   static final Map<String, String> languageFlags = {
-    'English': '🇬🇧',
-    'French': '🇫🇷',
-    'Spanish': '🇪🇸',
-    'German': '🇩🇪',
-    'Italian': '🇮🇹',
-    'Portuguese': '🇵🇹',
-    'Arabic': '🇸🇦',
-    'Chinese': '🇨🇳',
-    'Japanese': '🇯🇵',
-    'Korean': '🇰🇷',
-    'Hindi': '🇮🇳',
-    'Russian': '🇷🇺',
-    'Turkish': '🇹🇷',
-    'Dutch': '🇳🇱',
-    'Polish': '🇵🇱',
-    'Tamazight': '🇲🇦',
+    'Arabic': '🇸🇦 AR',
+    'Chinese': '🇨🇳 ZH',
+    'Dutch': '🇳🇱 NL',
+    'English': '🇬🇧 EN',
+    'French': '🇫🇷 FR',
+    'German': '🇩🇪 DE',
+    'Hindi': '🇮🇳 HI',
+    'Italian': '🇮🇹 IT',
+    'Japanese': '🇯🇵 JA',
+    'Korean': '🇰🇷 KO',
+    'Polish': '🇵🇱 PL',
+    'Portuguese': '🇵🇹 PT',
+    'Russian': '🇷🇺 RU',
+    'Spanish': '🇪🇸 ES',
+    'Tamazight': '🇲🇦 ZG',
+    'Turkish': '🇹🇷 TR',
   };
 
   static final List<String> languages = [
