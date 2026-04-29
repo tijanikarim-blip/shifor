@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart' show Firebase;
 
 import 'core/theme/app_theme.dart';
 import 'providers/auth_provider.dart';
+import 'providers/company_provider.dart';
 import 'screens/auth/main_app_screen.dart';
 
 bool _useDemoMode = true; // Set to false when Firebase is fully configured with SHA keys
@@ -34,6 +35,7 @@ class ShiforApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider(_useDemoMode)),
+        ChangeNotifierProvider(create: (_) => CompanyProvider()),
       ],
       child: MaterialApp(
         title: 'Shifor',
