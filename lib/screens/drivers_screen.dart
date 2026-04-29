@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/mock_data.dart';
-import '../widgets/job_card.dart';
-import '../widgets/filter_bar.dart';
+import '../widgets/driver_card.dart';
 
-class JobsScreen extends StatefulWidget {
-  const JobsScreen({super.key});
+class DriversScreen extends StatefulWidget {
+  const DriversScreen({super.key});
 
   @override
-  State<JobsScreen> createState() => _JobsScreenState();
+  State<DriversScreen> createState() => _DriversScreenState();
 }
 
-class _JobsScreenState extends State<JobsScreen> {
-  final List<String> _filters = ['All', 'Full-time', 'Part-time', 'Contract'];
+class _DriversScreenState extends State<DriversScreen> {
+  final List<String> _filters = ['All', 'Near Me', 'Top Rated', 'Verified'];
   String _selectedFilter = 'All';
   bool _isLoading = true;
   String _searchQuery = '';
@@ -23,9 +22,7 @@ class _JobsScreenState extends State<JobsScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     });
   }
 
@@ -43,7 +40,7 @@ class _JobsScreenState extends State<JobsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Find Jobs',
+                    'Find Drivers',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
@@ -54,7 +51,7 @@ class _JobsScreenState extends State<JobsScreen> {
                   TextField(
                     onChanged: (value) => setState(() => _searchQuery = value),
                     decoration: InputDecoration(
-                      hintText: 'Search jobs, companies...',
+                      hintText: 'Search drivers...',
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
                       fillColor: AppColors.white,
@@ -62,7 +59,6 @@ class _JobsScreenState extends State<JobsScreen> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -125,12 +121,23 @@ class _JobsScreenState extends State<JobsScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: FilterBar(
-                filters: _filters,
-                selectedFilter: _selectedFilter,
-                onFilterSelected: (filter) {
-                  setState(() => _selectedFilter = filter);
-                },
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _filters.map((filter) {
+                    final isSelected = filter == _selectedFilter;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: FilterChip(
+                        label: Text(filter),
+                        selected: isSelected,
+                        onSelected: (_) => setState(() => _selectedFilter = filter),
+                        selectedColor: AppColors.primary.withValues(alpha: 0.2),
+                        checkmarkColor: AppColors.primary,
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -139,14 +146,14 @@ class _JobsScreenState extends State<JobsScreen> {
                   ? _buildShimmer()
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _getFilteredJobs().length,
+                      itemCount: _getFilteredDrivers().length,
                       itemBuilder: (context, index) {
-                        final job = _getFilteredJobs()[index];
+                        final driver = _getFilteredDrivers()[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: JobCard(
-                            job: job,
-                            onTap: () => _showJobDetails(context, job),
+                          child: DriverCard(
+                            driver: driver,
+                            onTap: () => _showDriverDetails(context, driver),
                           ),
                         );
                       },
@@ -164,7 +171,7 @@ class _JobsScreenState extends State<JobsScreen> {
       itemCount: 4,
       itemBuilder: (context, index) => Container(
         margin: const EdgeInsets.only(bottom: 12),
-        height: 140,
+        height: 180,
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
@@ -173,44 +180,50 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
-List<Map<String, dynamic>> _getFilteredJobs() {
-    final jobs = _getAllJobs();
-    if (_searchQuery.isEmpty && _selectedFilter == 'All' && _selectedCountry == null && _selectedCity == null) return jobs;
-     
-    return jobs.where((job) {
+  List<Map<String, dynamic>> _getFilteredDrivers() {
+    final drivers = _getAllDrivers();
+    if (_searchQuery.isEmpty && _selectedFilter == 'All' && _selectedCountry == null && _selectedCity == null) {
+      return drivers;
+    }
+    
+    return drivers.where((driver) {
       final matchesSearch = _searchQuery.isEmpty ||
-          job['title'].toString().toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          job['company'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesFilter = _selectedFilter == 'All' || job['type'] == _selectedFilter;
+          driver['name'].toString().toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesFilter = _selectedFilter == 'All' ||
+          (_selectedFilter == 'Near Me' && driver['location'].toString().contains('Chicago')) ||
+          (_selectedFilter == 'Top Rated' && (driver['rating'] as double) >= 4.8) ||
+          (_selectedFilter == 'Verified' && driver['verified'] == true);
       final matchesCountry = _selectedCountry == null ||
-          job['location'].toString().contains(_selectedCountry!);
+          driver['location'].toString().contains(_selectedCountry!);
       final matchesCity = _selectedCity == null ||
-          job['location'].toString().contains(_selectedCity!);
+          driver['location'].toString().contains(_selectedCity!);
       return matchesSearch && matchesFilter && matchesCountry && matchesCity;
     }).toList();
   }
 
-  List<Map<String, dynamic>> _getAllJobs() {
-    return MockData.jobs.map((job) => {
-      'id': job['id'],
-      'title': job['title'],
-      'company': job['company'],
-      'location': job['location'],
-      'salary': job['salary'],
-      'type': job['type'],
-      'requirements': job['requirements'] ?? [],
-      'posted': job['posted'],
-      'isUrgent': job['isUrgent'] ?? false,
+  List<Map<String, dynamic>> _getAllDrivers() {
+    return MockData.drivers.map((driver) => {
+      'id': driver['id'],
+      'name': driver['name'],
+      'photo': driver['photo'],
+      'rating': driver['rating'],
+      'reviews': driver['reviews'],
+      'verified': driver['verified'],
+      'licenseType': driver['licenseType'],
+      'experience': driver['experience'],
+      'availability': driver['availability'],
+      'location': driver['location'],
+      'hourlyRate': driver['hourlyRate'],
     }).toList();
   }
 
-  void _showJobDetails(BuildContext context, Map<String, dynamic> job) {
+  void _showDriverDetails(BuildContext context, Map<String, dynamic> driver) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.75,
+        height: MediaQuery.of(context).size.height * 0.6,
         decoration: const BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -219,46 +232,62 @@ List<Map<String, dynamic>> _getFilteredJobs() {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    job['title'],
-                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              job['company'],
-              style: const TextStyle(fontSize: 16, color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 20),
-            _buildDetailRow(Icons.location_on, job['location']),
-            _buildDetailRow(Icons.attach_money, job['salary']),
-            _buildDetailRow(Icons.work, job['type']),
-            _buildDetailRow(Icons.access_time, 'Posted ${job["posted"]}'),
-            const SizedBox(height: 20),
-            const Text('Requirements', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
-            ...List.generate(
-              (job['requirements'] as List).length,
-              (i) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  children: [
-                    const Icon(Icons.check_circle, size: 16, color: AppColors.success),
-                    const SizedBox(width: 8),
-                    Text(job['requirements'][i]),
-                  ],
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 35,
+                  backgroundImage: NetworkImage(driver['photo']),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            driver['name'],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (driver['verified'] == true) ...[
+                            const SizedBox(width: 4),
+                            const Icon(Icons.verified,
+                                color: AppColors.primary, size: 18),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 16),
+                          const SizedBox(width: 4),
+                          Text('${driver['rating']} (${driver['reviews']} reviews)'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            _buildDetailRow(Icons.location_on, driver['location']),
+            _buildDetailRow(Icons.work, driver['experience']),
+            _buildDetailRow(Icons.badge, driver['licenseType']),
+            _buildDetailRow(Icons.attach_money, driver['hourlyRate']),
             const Spacer(),
             SizedBox(
               width: double.infinity,
@@ -267,7 +296,7 @@ List<Map<String, dynamic>> _getFilteredJobs() {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Application submitted!'),
+                      content: Text('Job request sent!'),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -276,9 +305,12 @@ List<Map<String, dynamic>> _getFilteredJobs() {
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text('Apply Now', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: const Text('Request Driver',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -289,12 +321,12 @@ List<Map<String, dynamic>> _getFilteredJobs() {
 
   Widget _buildDetailRow(IconData icon, String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.textSecondary),
+          Icon(icon, color: AppColors.textSecondary),
           const SizedBox(width: 12),
-          Text(text, style: const TextStyle(fontSize: 15)),
+          Text(text, style: const TextStyle(fontSize: 16)),
         ],
       ),
     );

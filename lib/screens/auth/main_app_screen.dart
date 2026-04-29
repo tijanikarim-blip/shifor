@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../screens/home_screen.dart';
 import '../../screens/jobs_screen.dart';
+import '../../screens/drivers_screen.dart';
 import '../../screens/applications_screen.dart';
 import '../../screens/messages_screen.dart';
 import '../../screens/profile_screen.dart';
@@ -21,6 +22,7 @@ class _AppNavScreenState extends State<_AppNavScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     JobsScreen(),
+    DriversScreen(),
     ApplicationsScreen(),
     MessagesScreen(),
     ProfileScreen(),
@@ -42,8 +44,9 @@ class _AppNavScreenState extends State<_AppNavScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.work), label: 'Jobs'),
-          BottomNavigationBarItem(icon: Icon(Icons.send), label: 'Applications'),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Drivers'),
+          BottomNavigationBarItem(icon: Icon(Icons.send), label: 'Apps'),
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Msgs'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
