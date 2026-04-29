@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../providers/company_provider.dart';
 import '../../screens/auth/sign_in_screen.dart';
+import '../../screens/company_post_jobs_screen.dart';
+import '../../screens/company_dashboard_screen.dart';
+import '../../screens/company_applicants_screen.dart';
 
 class CompanyProfileScreen extends StatelessWidget {
   const CompanyProfileScreen({super.key});
@@ -92,9 +95,9 @@ class CompanyProfileScreen extends StatelessWidget {
                     decoration: const BoxDecoration(color: AppColors.white),
                     child: Column(
                       children: [
-                        _buildMenuItem(Icons.dashboard, 'Dashboard', () {}),
-                        _buildMenuItem(Icons.people, 'Manage Drivers', () {}),
-                        _buildMenuItem(Icons.post_add, 'Post Jobs', () {}),
+                        _buildMenuItem(Icons.dashboard, 'Dashboard', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CompanyDashboardScreen()))),
+                        _buildMenuItem(Icons.people, 'Applicants', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ApplicantsScreen()))),
+                        _buildMenuItem(Icons.post_add, 'Post Jobs', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PostJobsScreen()))),
                         _buildMenuItem(Icons.settings, 'Settings', () {}),
                         const Divider(height: 1, color: AppColors.divider, indent: 16, endIndent: 16),
                         _buildMenuItem(Icons.logout, 'Logout', () => _logout(context, companyProvider), isDestructive: true),

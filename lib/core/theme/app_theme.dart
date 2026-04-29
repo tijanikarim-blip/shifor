@@ -13,6 +13,7 @@ class AppColors {
   
   // Background and surface colors
   static const Color background = Color(0xFFF8FAFB);
+  static const Color white = Color(0xFFFFFFFF);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceVariant = Color(0xFFF5F7FA);
   
@@ -271,11 +272,10 @@ class AppTheme {
           fontSize: 14,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+borderRadius: BorderRadius.circular(12),
         ),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
-        shadowColor: AppColors.shadowColor,
       ),
       
       // Page transitions for smooth animations
