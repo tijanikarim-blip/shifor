@@ -229,6 +229,7 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         _buildMenuItem(Icons.person_outline, 'Edit Profile', () => _editProfile(context, authProvider)),
+                        _buildMenuItem(Icons.language, 'Language', () => _changeLanguage(context, authProvider)),
                         _buildMenuItem(Icons.settings_outlined, 'Settings', () => _showComingSoon(context, 'Settings')),
                         _buildMenuItem(Icons.help_outline, 'Help & Support', () => _showComingSoon(context, 'Help & Support')),
                         const Divider(height: 1, color: AppColors.divider, indent: 16, endIndent: 16),
@@ -525,6 +526,42 @@ class ProfileScreen extends StatelessWidget {
   void _showComingSoon(BuildContext context, String feature) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('$feature coming soon!'), backgroundColor: AppColors.primary),
+    );
+  }
+
+  void _changeLanguage(BuildContext context, AuthProvider authProvider) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Select Language', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            ...MockData.languages.map((lang) {
+              final flag = MockData.languageFlags[lang] ?? '🌐';
+              return ListTile(
+                leading: Text(flag, style: const TextStyle(fontSize: 24)),
+                title: Text(lang),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Language set to $lang'), backgroundColor: AppColors.success),
+                  );
+                },
+              );
+            }),
+          ],
+        ),
+      ),
     );
   }
 
