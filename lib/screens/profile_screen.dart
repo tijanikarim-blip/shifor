@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/mock_data.dart';
 import '../providers/auth_provider.dart';
+import '../providers/locale_provider.dart';
 import '../screens/auth/sign_in_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -545,17 +546,22 @@ class ProfileScreen extends StatelessWidget {
           children: [
             const Text('Select Language', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
-            ...MockData.languages.map((lang) {
-              final flag = MockData.languageFlags[lang] ?? '🌐';
+            ...['ar', 'en', 'fr', 'tr'].map((code) {
+              final name = code == 'ar' ? 'العربية' : code == 'en' ? 'English' : code == 'fr' ? 'Français' : 'Türkçe';
+              final flag = code == 'ar' ? '🇸🇦' : code == 'en' ? '🇬🇧' : code == 'fr' ? '🇫🇷' : '🇹🇷';
               return ListTile(
                 leading: Text(flag, style: const TextStyle(fontSize: 24)),
-                title: Text(lang),
+                title: Text(name),
                 trailing: const Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Language set to $lang'), backgroundColor: AppColors.success),
-                  );
+                onTap: () async {
+                  final localeProvider = context.read<LocaleProvider>();
+                  await localeProvider.setLocale(code);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Language set to $name'), backgroundColor: AppColors.success),
+                    );
+                  }
                 },
               );
             }),
